@@ -231,6 +231,7 @@ export interface Database {
           submitted_at: string;
           rank_position: number;
         };
+        Relationships: [];
       };
     };
     Functions: Record<string, never>;

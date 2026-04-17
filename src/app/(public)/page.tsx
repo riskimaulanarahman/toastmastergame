@@ -5,17 +5,20 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { createServiceRoleClient } from "@/lib/supabase/service-role";
+import type { DbTable } from "@/types/database";
 
 export default async function HomePage(): Promise<JSX.Element> {
   noStore();
 
   const supabase = createServiceRoleClient();
+  type PublicSession = Pick<DbTable<"game_sessions">, "id" | "title" | "status" | "end_at">;
 
-  const { data: sessions } = await supabase
+  const { data } = await supabase
     .from("game_sessions")
-    .select("id, title, status, end_at")
+    .select("id,title,status,end_at")
     .in("status", ["scheduled", "live", "finished"])
     .order("created_at", { ascending: false });
+  const sessions = (data ?? []) as PublicSession[];
 
   return (
     <div className="space-y-6">
@@ -26,7 +29,7 @@ export default async function HomePage(): Promise<JSX.Element> {
         </CardHeader>
       </Card>
 
-      {sessions && sessions.length > 0 ? (
+      {sessions.length > 0 ? (
         <div className="grid gap-4 md:grid-cols-2">
           {sessions.map((session) => (
             <Card key={session.id}>

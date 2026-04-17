@@ -1,5 +1,18 @@
-import nextVitals from "eslint-config-next/core-web-vitals";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
 
-const eslintConfig = [...nextVitals, { rules: { "@next/next/no-img-element": "off" } }];
+import { FlatCompat } from "@eslint/eslintrc";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+const compat = new FlatCompat({
+  baseDirectory: __dirname
+});
+
+const eslintConfig = [
+  ...compat.extends("next/core-web-vitals"),
+  { rules: { "@next/next/no-img-element": "off" } }
+];
 
 export default eslintConfig;

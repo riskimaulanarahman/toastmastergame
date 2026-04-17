@@ -101,7 +101,9 @@ export async function getSessionById(
     privileged?: boolean;
   }
 ): Promise<SessionWithGameSet> {
-  const supabase = options?.privileged ? createServiceRoleClient() : await createServerSupabaseClient();
+  const supabase = options?.privileged
+    ? createServiceRoleClient()
+    : ((await createServerSupabaseClient()) as unknown as ReturnType<typeof createServiceRoleClient>);
 
   const { data, error } = await supabase
     .from("game_sessions")
